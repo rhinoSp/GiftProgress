@@ -32,7 +32,8 @@
         app:csb_min_value="0"
         app:csb_progress_color="#FFFB7E16"
         app:csb_progress_corner="3dp"
-        app:csb_progress_height="3dp" />
+        app:csb_progress_height="3dp"
+        android:background="#1a000000"/>
 
     <Button
         android:id="@+id/bt_switch"

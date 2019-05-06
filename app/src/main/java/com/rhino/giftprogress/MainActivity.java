@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<SpaceProgressView.ProgressSpace> progressSpaceList = new ArrayList<>();
         List<SpaceProgressView.Progress> progressList = new ArrayList<>();
-        for (int i = 0; i < max; i++) {
-            progressSpaceList.add(new SpaceProgressView.ProgressSpace(1 + i, dip2px(getApplicationContext(), 2), 0xFFFFFFFF));
-            progressList.add(new SpaceProgressView.Progress(1 + i, 0xFF888888, 0xFFFF0000, 0xFFD9D9D9));
+        for (int i = min; i < max; i++) {
+            progressSpaceList.add(new SpaceProgressView.ProgressSpace(1+i, dip2px(getApplicationContext(), 2), 0xFFFFFFFF));
+            progressList.add(new SpaceProgressView.Progress(1+i, 0xFF888888, 0xFFFF0000, 0xFFD9D9D9));
         }
         mSpaceProgressView.setProgressList(progressList);
         mSpaceProgressView.setProgressSpaceList(progressSpaceList);

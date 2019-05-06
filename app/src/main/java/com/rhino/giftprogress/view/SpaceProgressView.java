@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -139,6 +140,21 @@ public class SpaceProgressView extends View {
         canvas.restore();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getX();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                int progress = coord2Progress(x - mProgressLength / 2f);
+                setProgress(progress, false, false);
+                break;
+            default:
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
     /**
      * Do something init.
      *
@@ -197,14 +213,24 @@ public class SpaceProgressView extends View {
                         mProgressRect.top,
                         x,
                         mProgressRect.bottom);
-                if (progress.progress < mCurrProgress) {
-                    mProgressPaint.setColor(progress.progressPreColor);
-                } else if (progress.progress == mCurrProgress) {
-                    mProgressPaint.setColor(progress.progressCurrColor);
+
+                mProgressDrawable.setBounds(rect);
+                if (progress.progress == mMinProgress + 1) {
+                    mProgressDrawable.setCornerRadii(new float[]{mProgressCorner, mProgressCorner, 0, 0, 0, 0, mProgressCorner, mProgressCorner});
+                } else if (progress.progress == mMaxProgress) {
+                    mProgressDrawable.setCornerRadii(new float[]{0, 0, mProgressCorner, mProgressCorner, mProgressCorner, mProgressCorner, 0, 0});
                 } else {
-                    mProgressPaint.setColor(progress.progressNextColor);
+                    mProgressDrawable.setCornerRadius(0);
                 }
-                canvas.drawRect(rect, mProgressPaint);
+
+                if (progress.progress < mCurrProgress) {
+                    mProgressDrawable.setColor(progress.progressPreColor);
+                } else if (progress.progress == mCurrProgress) {
+                    mProgressDrawable.setColor(progress.progressCurrColor);
+                } else {
+                    mProgressDrawable.setColor(progress.progressNextColor);
+                }
+                mProgressDrawable.draw(canvas);
             }
         }
         canvas.restore();
@@ -222,6 +248,9 @@ public class SpaceProgressView extends View {
         canvas.save();
 
         for (ProgressSpace progressSpace : mProgressSpaceList) {
+            if (progressSpace.progress == mMaxProgress) {
+                continue;
+            }
             int x = (int) progress2Coord(progressSpace.progress);
             Rect rect = new Rect(x - progressSpace.spaceWidth / 2,
                     mProgressRect.top,
@@ -311,6 +340,24 @@ public class SpaceProgressView extends View {
     private float progress2Coord(int progress) {
         return (float) mProgressLength * (progress - mMinProgress)
                 / (mMaxProgress - mMinProgress) - mProgressLength / 2f;
+    }
+
+    /**
+     * Return progress value by x or y coordinate.
+     *
+     * @param coord x or y coordinate
+     * @return progress value
+     */
+    private int coord2Progress(float coord) {
+        if (coord > mProgressLength / 2) {
+            return mMaxProgress;
+        } else if (coord < -mProgressLength / 2) {
+            return mMinProgress;
+        } else {
+            return Math.round((coord + mProgressLength / 2f)
+                    * (mMaxProgress - mMinProgress) / mProgressLength)
+                    + mMinProgress;
+        }
     }
 
     /**
