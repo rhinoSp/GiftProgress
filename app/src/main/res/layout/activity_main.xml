@@ -22,6 +22,18 @@
         app:csb_progress_height="3dp"
         app:csb_thumb_width="2dp" />
 
+    <com.rhino.giftprogress.view.SpaceProgressView
+        android:id="@+id/SpaceProgressView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="30dp"
+        app:csb_background_color="#D9D9D9"
+        app:csb_max_value="6"
+        app:csb_min_value="0"
+        app:csb_progress_color="#FFFB7E16"
+        app:csb_progress_corner="3dp"
+        app:csb_progress_height="3dp" />
+
     <Button
         android:id="@+id/bt_switch"
         android:layout_width="wrap_content"

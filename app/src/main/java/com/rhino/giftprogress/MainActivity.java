@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.rhino.giftprogress.view.GiftProgressView;
+import com.rhino.giftprogress.view.SpaceProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private GiftProgressView mGiftProgressView;
+    private SpaceProgressView mSpaceProgressView;
     private int mCurrentProgress = 1;
+    private int mCurrentProgress1 = 1;
     private int minMaxSpace = 10;
     private int topDrawableSpace = 5;
 
@@ -25,12 +28,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mGiftProgressView = findViewById(R.id.GiftProgressView);
+        mSpaceProgressView = findViewById(R.id.SpaceProgressView);
 
         mGiftProgressView.setProgress(mCurrentProgress);
         mGiftProgressView.setOnProgressChangedListener(new GiftProgressView.OnProgressChangedListener() {
             @Override
             public void onChanged(GiftProgressView progressView, boolean fromUser, boolean isFinished) {
                 switchMinMaxProgress(progressView.getProgress());
+            }
+        });
+
+        switchMinMaxProgress1();
+        mSpaceProgressView.setOnProgressChangedListener(new SpaceProgressView.OnProgressChangedListener() {
+            @Override
+            public void onChanged(SpaceProgressView progressView, boolean fromUser, boolean isFinished) {
+
             }
         });
 
@@ -45,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     topDrawableSpace = 5;
                 }
                 switchMinMaxProgress(mCurrentProgress);
+
+
+                mSpaceProgressView.setProgress(6);
             }
         });
 
@@ -56,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     mCurrentProgress = mGiftProgressView.getMinProgress();
                 }
                 mGiftProgressView.setProgress(mCurrentProgress);
+
+                mCurrentProgress1 ++;
+                if (mCurrentProgress1 > mSpaceProgressView.getMaxProgress()) {
+                    mCurrentProgress1 = mSpaceProgressView.getMinProgress();
+                }
+                mSpaceProgressView.setProgress(mCurrentProgress1);
+
             }
         });
     }
@@ -94,6 +116,25 @@ public class MainActivity extends AppCompatActivity {
         mGiftProgressView.setMaxProgress(max);
         mGiftProgressView.setProgress(min);
 
+    }
+
+    private void switchMinMaxProgress1() {
+
+        int min = 0;
+        int max = 6;
+
+        List<SpaceProgressView.ProgressSpace> progressSpaceList = new ArrayList<>();
+        List<SpaceProgressView.Progress> progressList = new ArrayList<>();
+        for (int i = 0; i < max; i++) {
+            progressSpaceList.add(new SpaceProgressView.ProgressSpace(1 + i, dip2px(getApplicationContext(), 2), 0xFFFFFFFF));
+            progressList.add(new SpaceProgressView.Progress(1 + i, 0xFF888888, 0xFFFF0000, 0xFFD9D9D9));
+        }
+        mSpaceProgressView.setProgressList(progressList);
+        mSpaceProgressView.setProgressSpaceList(progressSpaceList);
+
+        mSpaceProgressView.setMinProgress(min);
+        mSpaceProgressView.setMaxProgress(max);
+        mSpaceProgressView.setProgress(min);
     }
 
     public Drawable tintDrawable(Drawable drawable, int color) {
